@@ -297,7 +297,7 @@ INT   50
 
 - Run `make clean`.
 
-- Compress all the source files using `zip`.
+- Compress all the source files including Makefile using `zip`.
 
 - Rename the compressed file to `project1_[student number].zip`.
 
