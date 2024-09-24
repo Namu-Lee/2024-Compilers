@@ -1,6 +1,6 @@
 # Project #1: Lexical Analysis
 
-- **Due**: TBD
+- **Due**: October 9, 2024
 
 - **Course**: Introduction to Compilers
 
