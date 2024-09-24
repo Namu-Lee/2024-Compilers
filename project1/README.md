@@ -16,27 +16,29 @@
 
 1. [Introduction](#introduction)
 
-2. [Setting up the Project Environment](#setting-up-the-project-environment)
+1. [Setting up the Project Environment](#setting-up-the-project-environment)
 
-3. [Lexical Structure of subC](#lexical-structure-of-subc)
+1. [Lexical Structure of subC](#lexical-structure-of-subc)
 
-4. [Goal of the Project](#goal-of-the-project)
+1. [Goal of the Project](#goal-of-the-project)
 
-5. [Submission](#submission)
+1. [Implementation Details](#implementation-details)
 
-6. [Appendix](#appendix)
+1. [Submission](#submission)
+
+1. [Appendix](#appendix)
 
 ## Introduction
 
 ### Lexical anaylsis
 
-Lexical analysis is conversion of a text into meaningful lexical tokens (lexemes) belonging to categories defined by a lexical analyzer (a.k.a. lexer) program. **The lexer gets a program as an input and outputs a sequence of predefined tokens** after analyzing the program. For example, consider the following C program as an input to the lexer.
+Lexical analysis is the process of converting text into meaningful lexical tokens (lexemes) belonging to categories defined by a lexical analyzer (also known as *lexer*) program. **The lexer gets a program as an input and outputs a sequence of predefined tokens** after analyzing the program. For example, consider the following C program as an input to the lexer.
 
 ```C
 int foo () { return 0; }
 ```
 
-The lexer tokenizes this program into the sequence of meaningful tokens. In addition, some actions can be performed when each token is recognized by the lexer.
+The lexer tokenizes this program into a sequence of meaningful tokens. In addition, some actions can be performed when each token is recognized by the lexer.
 
 The following strings are the tokens recognized by the lexer.
 
@@ -48,11 +50,23 @@ In this project, we will build a lexer for our toy language C+-, referred to as 
 
 ### Building Lexers
 
-Lexer generators can automatically build a lexer with just a few lines of tokenization rules. Given the availability of numerous lexer generators, we don't have to build a lexer from scratch. [Flex](https://en.wikipedia.org/wiki/Flex_(lexical_analyser_generator)) (Fast Lexical Analyzer Generator), a reimplementation of POSIX [lex](https://en.wikipedia.org/wiki/Lex_(software)), is a widely used lexer generator. It is also compatible with POSIX [yacc](https://en.wikipedia.org/wiki/Yacc), a parser generator, which will be used later in this course. Throughout this course, We will utilize [flex](https://en.wikipedia.org/wiki/Flex_(lexical_analyser_generator)) to generate the lexer for subC.
+Lexer generators can automatically build a lexer with just a few lines of tokenization rules. Given the availability of numerous lexer generators, we don't have to build a lexer from scratch. [Flex](https://en.wikipedia.org/wiki/Flex_(lexical_analyser_generator)) (Fast Lexical Analyzer Generator), a reimplementation of POSIX [lex](https://en.wikipedia.org/wiki/Lex_(software)), is a widely used lexer generator. It is also compatible with POSIX [yacc](https://en.wikipedia.org/wiki/Yacc), a parser generator, which will be used later in this course. Throughout this course, we will utilize Flex to generate the lexer for subC.
 
 ## Setting up the Project Environment
 
 We strongly recommend using [Docker](https://www.docker.com/) to set up your project environment. However, you can work on the project on any platform, as long as the project compiles and runs correctly.
+
+For students who are not willing to use the provided docker image, we provide a list of packages required for the project.
+
+- [Flex](https://github.com/westes/flex)
+
+- [GNU Bison](https://www.gnu.org/software/bison/)
+
+- [GCC (GNU Compiler Collection)](https://gcc.gnu.org/)
+
+- [GNU Make](https://www.gnu.org/software/make/)
+
+- [Git](https://git-scm.com/)
 
 ### Install Docker
 
@@ -86,6 +100,12 @@ CONTAINER ID   IMAGE                COMMAND       CREATED         STATUS        
 0db5efd033ce   namulee/flex-bison   "/bin/bash"   4 seconds ago   Up 4 seconds             2024-compilers
 ```
 
+If the container is not running, start the container using `docker start`.
+
+```sh
+docker start 2024-compilers
+```
+
 ### Attach to the container
 
 Once the container is running, you can attach to the container's shell using the `docker exec` command.
@@ -94,7 +114,7 @@ Once the container is running, you can attach to the container's shell using the
 docker exec -it 2024-compilers bash
 ```
 
-> Microsoft provides an [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension for VS Code, which allows you to run VS Code inside a Docker container. It is recommended to use this extension for your convenience. Please follow the official [guide](https://code.visualstudio.com/docs/devcontainers/tutorial) to get started.
+> Microsoft provides [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension for VS Code, which allows you to run VS Code inside a Docker container. It is recommended to use this extension for your convenience. Please follow the official [guide](https://code.visualstudio.com/docs/devcontainers/tutorial) to get started.
 
 ### Clone the project repository
 
@@ -102,6 +122,21 @@ Clone the repository by executing the following command while attached to the co
 
 ```sh
 git clone https://github.com/namu-lee/2024-compilers.git
+```
+
+### How to build and test
+
+Navigate to the `src` directory, and build the project using `make` command.
+
+```sh
+cd ./src
+make all
+```
+
+Once the build is completed, you can test it with the following command. If you do not specify the `[input_file]`, `stdin` will be used as the input stream.
+
+```sh
+./subc [input_file]
 ```
 
 ## Lexical Structure of subC
@@ -134,46 +169,44 @@ Following definitions of tokens are written in [POSIX ERE](https://en.wikipedia.
 
 ## Goal of the Project
 
-Build a lexer that recognizes all the subC tokens from the input code and prints them to `stdout` each time the token is recognized.
+Build a lexer using Flex that recognizes all the subC tokens from the input code and prints them to `stdout` each time the token is recognized.
 
-You need to implement your own hash table. You are free to implement any type of hash table, as long as it does not interfere with the execution of the program.
+You need to implement your own symbol table using a hash table. You are free to implement any type of hash table, as long as it does not interfere with the execution of the program.
 
-Complete the code in `subc.l`, `hash.c`. You may add or modify any source files as needed, but please make sure that the project can be built using `make all` command.
+Complete the code in `subc.l` and `hash.c`. You may add or modify any source files as needed, but please make sure that the project can be built using `make all` command.
 
-### Implementation details
-
----
+## Implementation Details
 
 ### 1. *Identifiers* and *Keywords*
 
-> ***Keywords*** are reserved tokens for special purpose by the language.  
+> ***Keywords*** are reserved tokens for special purposes by the language.  
 > ***Identifiers*** are programmer defined names for entities.
 
 *Identifiers* and *Keywords* are recognized by the same pattern.
 
-- *Only uppercase and lowercase English letters, numbers, and underscores(_) can be used.*
+- Only uppercase and lowercase English letters, numbers, and underscores(_) can be used.
 
-- *Predefined Keywords cannot be overridden by identifiers.*
+- Predefined keywords cannot be overridden by identifiers.
 
-- *A lexeme must start with an English letter or an underscore. Lexemes starting with a number are not permitted.*
+- A lexeme must start with an English letter or an underscore. Lexemes starting with a number are not permitted.
 
-#### Then, how can they be distinguished between each other?
+Then, how can they be distinguished between each other?
 
-When the lexer recognizes a lexeme matches this pattern, it searches the hash table. Each hash table entry has a reference count to keep track of how many times the lexeme has been referenced. If an entry already exists, check whether the type of the lexeme is *Identifier* or *Keyword*. If it is, increment the reference count of the entry. Conversely, if an entry for the lexeme does not exist in the hash table, create a new entry with its token type set to *Identifier* and insert it into the hash table.
+When the lexer recognizes a lexeme matches this pattern, it searches the symbol table. Each symbol table entry has a reference count to keep track of how many times the lexeme has been referenced. If an entry already exists, check whether the type of the lexeme is *Identifier* or *Keyword*. If it is, increment the reference count of the entry. Conversely, if an entry for the lexeme does not exist in the symbol table, create a new entry with its token type set to *Identifier* and insert it into the symbol table.
 
-Therefore, to enable the lexer to distinguish *Identifiers* from *Keywords*, all *Keywords* must be pre-inserted into the hash table before the lexer gets the input.
+**Therefore, to enable the lexer to distinguish *Identifiers* from *Keywords*, all *Keywords* must be pre-inserted into the symbol table before the lexer gets the input.**
 
-We recommend implementing the interface to the hash table using the `enter()` function in `hash.c`.
+We recommend implementing the interface to the symbol table using the `enter()` function in `hash.c`.
 
 ### 2. Nested comments
 
 > *TL;DR*  
-> *Exploit the **start condition** to implement nested comments*
+> *Use the **start condition** to implement nested comments.*
 
 Your lexer must be able to recognize nested comments such as,  
 `/* I /* am a */ comment */`, which are against the C standard.
 
-Nested comments cannot be recognized with regular expressions, so we are going to exploit the *start condition* in flex. The *start condition* allows us to easily distinguish between normal mode and comment mode.
+Nested comments cannot be recognized with regular expressions, so we are going to use the *start condition* in Flex. The *start condition* allows us to easily distinguish between normal mode and comment mode.
 
 Lexer starts in normal mode. If the lexer recognizes `/*` while reading the input, it switches to comment mode. In comment mode, the lexer performs the following three actions:
 
@@ -183,16 +216,16 @@ Lexer starts in normal mode. If the lexer recognizes `/*` while reading the inpu
 
 3. All other characters are ignored in the comment mode.
 
-In order to make the lexer begin with normal mode, place the `main()` function in the procedure section of flex, and set start mode as normal within the `main()`. (Call for `yylex()` should be in there too)
+In order to make the lexer begin with normal mode, place the `main()` function in the procedure section of Flex, and set start mode as normal within the `main()`. (Call for `yylex()` should be in there too)
 
 ### 3. Dotdot ( `..` ) operator and float constant
 
 > *TL;DR*  
-> *Exploit the **lookahead operator** to implement `..` operator.*
+> *Use the **lookahead operator** to implement the `..` operator.*
 
 In subC, there is a unique dotdot ( `..` ) operator, which encodes a range of integers. The range starts from the number before the operator, and ends at the number after the operator.
 
-The definition of float constant in subC slightly differs from that in standard C. It is illegal to write a float constant like `.325`. The lexer must recognize `..` operator while distingishing it from the float constant. For instance, `1..2` must be tokenized as `"integer", "..", "integer"` rather than `"float", "float"`. You can exploit the lookahead operator( `/` ) to deal with this ambiguity.
+The definition of float constant in subC slightly differs from that in standard C. It is illegal to write a float constant like `.325`. The lexer must recognize the `..` operator while distinguishing it from the float constant. For instance, `1..2` must be tokenized as `"integer", "..", "integer"` rather than `"float", "float"`. You can use the lookahead operator( `/` ) to deal with this ambiguity.
 
 ### 4. Output format
 
@@ -205,12 +238,12 @@ Please follow the format described below when printing the result.
 - Print ***Token type***, ***Lexeme*** and ***Reference count*** to `stdout`, each on a new line, in that order.
 
   - ***Token type*** is the type of a token.  
-  *e.g.) Keyword(KEY), Operator(OP), Identifier(ID), Float-constant(F), Integer-constant(INT)*
+  *e.g. Keyword(KEY), Operator(OP), Identifier(ID), Float-constant(F), Integer-constant(INT)*
   
-  - ***Lexeme*** is the recognized string itself  
-  *e.g.) 'int', '=', '123' ...*
+  - ***Lexeme*** is the recognized string itself.  
+  *e.g. 'int', '=', '123' ...*
 
-  - ***Reference count*** is the number of recognizations of a token in a program.
+  - ***Reference count*** is the number of recognitions of a token in a program.
 
 - Print *Reference count* only for identifiers or keywords.
 
@@ -220,8 +253,7 @@ Please follow the format described below when printing the result.
 
 #### I/O Example
 
----
-Input code:
+Input code: `input.c`
 
 ```text
 /************************
@@ -244,6 +276,7 @@ struct _line {
 Output:
 
 ```text
+$ ./subc input.c
 KEY   struct    1
 ID    _point    1
 OP    {
@@ -299,7 +332,7 @@ INT   50
 
 - Compress all the source files with `zip`, including the Makefile.
 
-- Rename the compressed file to `project1_[student number].zip`.
+- Rename the compressed file to `project1_<student number>.zip`.
 
 - Submit it on [eTL](https://etl.snu.ac.kr).
 
@@ -311,4 +344,4 @@ INT   50
 
 [CS143 - flex in A Nutshell](https://web.stanford.edu/class/archive/cs/cs143/cs143.1128/handouts/050%20Flex%20In%20A%20Nutshell.pdf)
 
-[Yash (VS Code extension for flex/bison syntax highlighting)](https://marketplace.visualstudio.com/items?itemName=daohong-emilio.yash)
+[Yash (VS Code extension for Flex/Bison syntax highlighting)](https://marketplace.visualstudio.com/items?itemName=daohong-emilio.yash)
