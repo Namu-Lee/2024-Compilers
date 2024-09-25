@@ -72,6 +72,13 @@ For students who are not willing to use the provided docker image, we provide a 
 
 Please follow the official instructions for your operating system ([Linux](https://docs.docker.com/desktop/install/linux-install/), [Windows](https://docs.docker.com/desktop/install/windows-install/), [MacOS](https://docs.docker.com/desktop/install/mac-install/)) to install Docker on your machine.
 
+For linux users to manage the docker as a non-root user, add a user to the docker group after finishing the installation. Type the following command and re-login to the shell.
+
+```sh
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
+
 ### Create a project container
 
 Pull the project image from docker hub.
