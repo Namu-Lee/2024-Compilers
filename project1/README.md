@@ -87,8 +87,7 @@ Pull the project image from docker hub.
 docker pull namulee/flex-bison
 ```
 
-Go to the directory you want to work on the project, and run a new container from the image.  
-The directory will be [bind mounted](https://docs.docker.com/engine/storage/bind-mounts/) to the container after executing the following command.
+Go to the directory you want to work on the project, and run a new container from the image. The directory will be [bind mounted](https://docs.docker.com/engine/storage/bind-mounts/) to the container after executing the following command.
 
 ```sh
 cd {YOUR_PROJECT_DIRECTORY}
