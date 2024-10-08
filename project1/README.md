@@ -87,15 +87,12 @@ Pull the project image from docker hub.
 docker pull namulee/flex-bison
 ```
 
-Go to the directory you want to work on the project, and run a new container from the image. The directory will be [bind mounted](https://docs.docker.com/engine/storage/bind-mounts/) to the container after executing the following command.
+Go to the directory you want to work on the project, and run a new container from the image. The directory will be [bind mounted](https://docs.docker.com/engine/storage/bind-mounts/) to the container after executing the following command. For windows `cmd` users, please
+replace `${PWD}` with `%cd%`.
 
 ```sh
 cd {YOUR_PROJECT_DIRECTORY}
-docker run  -itd \
-            --volume=./:/root \
-            --workdir=/root \
-            --name 2024-compilers \
-            namulee/flex-bison
+docker run -itd -v ${PWD}:/root -w /root --name 2024-compilers namulee/flex-bison
 ```
 
 You can check whether the container is running or not using `docker ps -a`.
