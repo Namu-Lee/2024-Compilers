@@ -22,8 +22,8 @@ void  REDUCE(char* s);
 
 /* yylval types */
 %union {
-  int		intVal;
-  char	*stringVal;
+  int   intVal;
+  char  *stringVal;
 }
 
 /* Precedences and Associativities */
@@ -31,9 +31,9 @@ void  REDUCE(char* s);
 %left STRUCTOP
 
 /* Tokens and Types */
-%token 				    TYPE STRUCT
-%token<stringVal>	ID CHAR_CONST STRING
-%token<intVal>		INTEGER_CONST
+%token            TYPE STRUCT
+%token<stringVal> ID CHAR_CONST STRING
+%token<intVal>    INTEGER_CONST
 
 %%
 
