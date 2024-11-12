@@ -9,7 +9,7 @@ char func2(void) {
 }
 
 int func3(void) {
-	return 'a';
+	return 'a'; /* error */
 }
 
 int main(void) {
