@@ -4,15 +4,15 @@ int func1(int a, char b) {
 	return 0;
 }
 
-char func2(void) {
+char func2() {
 	return 'a';
 }
 
-int func3(void) {
+int func3() {
 	return 'a'; /* error */
 }
 
-int main(void) {
+int main() {
 	int a;
 	char b;
 

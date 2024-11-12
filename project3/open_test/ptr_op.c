@@ -1,6 +1,6 @@
 /* pointer operation */
 
-int main(void) {
+int main() {
 	int a[10];
 	int *b;
 	char c[20];

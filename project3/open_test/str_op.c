@@ -21,7 +21,7 @@ struct str3 { /* error */
 
 
 
-int main(void) {
+int main() {
 	int i1;
 	char c1;
 
