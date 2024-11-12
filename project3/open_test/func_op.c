@@ -8,6 +8,10 @@ char func2(void) {
 	return 'a';
 }
 
+int func3(void) {
+	return 'a';
+}
+
 int main(void) {
 	int a;
 	char b;
