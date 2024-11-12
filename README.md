@@ -1,19 +1,15 @@
 # Term Projects
 
-- **Course**: Introduction to Compilers
-
-- **Semester**: Fall 2024
-
-- **TA**: Sanghyeon Lee (<sanghyeon@snu.ac.kr>)
+- Introduction to Compilers
 
 - Dept. of Electrical and Computer Engineering, Seoul National University
 
-## Plans
+## Overview
 
-- **Project 1**: September 24 ~ October 9
+- **Project 1**: Lexical Analysis
 
-- **Project 2**: October 16 ~ October 30
+- **Project 2**: Yacc Programming
 
-- **Project 3**: TBD
+- **Project 3**: Semantic Analysis
 
-- **Project 4**: TBD
+- **Project 4**: Code Generation

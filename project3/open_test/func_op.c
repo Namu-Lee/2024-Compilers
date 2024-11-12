@@ -8,12 +8,6 @@ char func2(void) {
 	return 'a';
 }
 
-void func3(int *a, int b) {
-	int *c;
-
-	c = a + b; /* error */
-}
-
 int main(void) {
 	int a;
 	char b;
