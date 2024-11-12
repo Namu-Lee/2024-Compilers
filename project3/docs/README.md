@@ -71,7 +71,7 @@ Once the build is completed, you can test it with the following command. If you 
 
 This section describes the semantic validations which should be implemented in this project and the corresponding error messages.
 
-In subC, the scope of struct definitions is always considered global unlike the standard C. Also, redefining the structure type is not allowed. However, the scope of struct type objects still follows the standard.
+In subC, the scope of struct definitions is always considered global unlike the standard C. Also, redefining the structure type is not allowed in anywhere. However, the scope of struct type objects still follows the standard.
 
 ### Undeclared variables and functions
 
@@ -87,7 +87,7 @@ In subC, the scope of struct definitions is always considered global unlike the 
 
   - If a variable is redefined in the same scope:
 
-  - Or, if a function or struct is redefined in the global scope:
+  - Or, if a function or struct is redefined in any scope:
     
     ``` bash
     input.c:10: error: redeclaration
@@ -99,15 +99,15 @@ In subC, the scope of struct definitions is always considered global unlike the 
 
   - Assignment operator (`=`)
     
-    Please check the semantics. For example,
+    Semantic checks for the assignment operator must be performed in order from top to bottom in the list below.
     
-      - If the left-hand side of an assignment operation is not a variable:
+    1.  If the left-hand side of an assignment operation is not a variable:
         
         ``` bash
         input.c:10: error: lvalue is not assignable
         ```
     
-      - If the types of the left-hand side and right-hand side are not the same:
+    2.  If the types of the left-hand side and right-hand side are not the same:
         
         ``` bash
         input.c:10: error: incompatible types for assignment operation
@@ -116,7 +116,7 @@ In subC, the scope of struct definitions is always considered global unlike the 
         *Please assume that there are no assignments of a string constant to a pointer type.*  
         *e.g.* `char *s = "Hello World";`
     
-      - If the right-hand side is `NULL` but the left-hand side is not a pointer type:
+    3.  If the right-hand side is `NULL` but the left-hand side is not a pointer type:
         
         ``` bash
         input.c:10: error: cannot assign 'NULL' to non-pointer type
@@ -221,8 +221,7 @@ In subC, the scope of struct definitions is always considered global unlike the 
     
         input.c:10: error: incompatible return types
     
-    *Please assume that there are no non-void type functions without a return statement.  
-    Also, functions returning struct types do not need to be type checked.*
+    *Please assume that there are no functions without a return statement. Also, functions returning struct types do not need to be type checked.*
 
   - If a non-function entity is called:
     
@@ -244,19 +243,19 @@ In the report, please briefly describe how you implemented the semantic analysis
 
 ### Output format
 
-Each time the parser encounters a semantic error, print the corresponding error message to stderr in the following format.
+Each time the parser encounters a semantic error, print the corresponding error message to `stdout` in the following format.
 
 ``` bash
 <file_name>:<line_number>: error: <description>
 ```
 
-  - Separate the messages with a **space**, right before and after `error:`.
+  - Please insert a **space** character, right before and after "`error:`".
 
   - Utilize `read_line()` function to get a line number.
 
   - You don’t have to consider the errors that occur across multiple lines.
 
-  - If there are multiple errors in the same line, print the error from the earliest reduced production.
+  - If there are multiple errors in the same line, print only one error generated from the earliest reduced production.
 
 A demonstrative example of an input-output pair is given below.
 
@@ -296,11 +295,11 @@ input.c:4: error: incompatible types for assignment operation
 
 ## Tips
 
-  - It is highly recommended to utilize the [midrule actions](https://www.gnu.org/software/bison/manual/html_node/Mid_002dRule-Actions.html) of bison. You may need to perform some actions in the middle of the productions to analyze the semantics.
+  - **Midrule Actions** It is highly recommended to utilize the [midrule actions](https://www.gnu.org/software/bison/manual/html_node/Mid_002dRule-Actions.html) of bison. You may need to perform some actions in the middle of the productions to analyze the semantics.
 
-  - Midrule actions may introduce new conflicts in the grammar. It is possible to modify the grammar to resolve the conflicts. But, please ensure that the modified grammar **MUST** remain syntactically equivalent to the original. That is, the order of reductions must not be changed after the modification, so that the order of error messages remain unchanged when the multiple errors occur in a line. If you modified the grammar, please describe how you modified the grammar in the report.
+  - **Modifying the Grammar** Midrule actions may introduce new conflicts in the grammar. It is possible to modify the grammar to resolve the conflicts. But, please ensure that the modified grammar **MUST** remain syntactically equivalent to the original. That is, the order of reductions must not be changed after the modification, so that the order of error messages remain unchanged when the multiple errors occur in a line. If you modified the grammar, please describe how you modified the grammar in the report.
 
-  - The overall design in this project will be carried over to the next project, so please thoroughly review the lecture slides (ch. 7 & 8) and the subC grammar before starting this project.
+  - **Tips** The overall design in this project will be carried over to the next project, so please thoroughly review the lecture slides (ch. 7 & 8) and the subC grammar before starting this project.
 
 ## Appendix
 
