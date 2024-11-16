@@ -59,6 +59,7 @@ ext_def_list
 ext_def
   : type_specifier pointers ID ';'
   | type_specifier pointers ID '[' INTEGER_CONST ']' ';'
+  | struct_specifier ';'
   | func_decl compound_stmt
   ;
 
