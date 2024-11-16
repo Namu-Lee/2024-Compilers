@@ -46,6 +46,13 @@ fi
 zipfile=${project}_${1}.zip # Compressed file name
 
 pushd src > /dev/null && \
+make clean
+
+if ! make; then
+  echo "$0: Cannot compile. Please make sure your code compiles successfully."
+  exit 1
+fi
+
 make clean && \
 popd > /dev/null && \
 rm -f ${zipfile} && \
