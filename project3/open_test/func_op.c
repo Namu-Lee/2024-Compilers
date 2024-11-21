@@ -27,7 +27,7 @@ int main() {
 	d = func2(b); /* error */
 	d = func2();
 
-	func3(&a, c);
+	func3(&a, c); /* error */
 	func3(&b, a); /* error */
 
 	d = func1(a, b); /* error */
