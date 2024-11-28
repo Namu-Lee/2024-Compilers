@@ -71,8 +71,6 @@ Once the build is completed, you can test it with the following command. If you 
 
 This section describes the semantic validations which should be implemented in this project and the corresponding error messages.
 
-In subC, the scope of struct definitions is always considered global unlike the standard C. Also, redefining the structure type is not allowed in anywhere. However, the scope of struct type objects still follows the standard.
-
 ### Undeclared variables and functions
 
   - If a variable or a function is used before its declaration:
@@ -97,117 +95,117 @@ In subC, the scope of struct definitions is always considered global unlike the 
 
 ### Type checking
 
-  - Assignment operator (`=`)
-    
-    Semantic checks for the assignment operator must be performed in order from top to bottom in the list below.
-    
-    1.  If the left-hand side of an assignment operation is not a variable:
-        
-        ``` bash
-        input.c:10: error: lvalue is not assignable
-        ```
-    
-    2.  If the types of the left-hand side and right-hand side are not the same:
-        
-        ``` bash
-        input.c:10: error: incompatible types for assignment operation
-        ```
-        
-        *Please assume that there are no assignments of a string constant to a pointer type.*  
-        *e.g.* `char *s = "Hello World";`
-    
-    3.  If the right-hand side is `NULL` but the left-hand side is not a pointer type:
-        
-        ``` bash
-        input.c:10: error: cannot assign 'NULL' to non-pointer type
-        ```
+#### Assignment operator (`=`)
 
-  - Binary and logical operators (`+`, `-`, `*`, `/`, `%`, `&&`, `||`, `!`)
-    
-      - If either operand is not an `int` type:
-        
-        ``` bash
-        input.c:10: error: invalid operands to binary expression
-        ```
+Semantic checks for the assignment operator must be performed in order from top to bottom in the list below.
 
-  - Unary operators (`-`, `++`, `--`)
+1.  If the left-hand side of an assignment operation is not a variable:
     
-      - If the operand of ‘unary `-`’ is not an `int` type:
-    
-      - Or, if the operand of ‘`++`, `--`’ is not an `int` or `char` type:
-        
-        ``` bash
-        input.c:10: error: invalid argument type to unary expression
-        ```
+    ``` bash
+    input.c:10: error: lvalue is not assignable
+    ```
 
-  - Relational operators (`>=`, `>`, `<=`, `<`)
+2.  If the right-hand side is `NULL` but the left-hand side is not a pointer type:
     
-      - If the operands are not both `int` or both `char` types:
-        
-        ``` bash
-        input.c:10: error: types are not comparable in binary expression
-        ```
+    ``` bash
+    input.c:10: error: cannot assign 'NULL' to non-pointer type
+    ```
 
-  - Equality operators (`==`, `!=`)
+3.  If the types of the left-hand side and right-hand side are not the same:
     
-      - If the operands are not both `int`, both `char`, both pointers of same types (including `struct*`):
-        
-        ``` bash
-        input.c:10: error: types are not comparable in binary expression
-        ```
-        
-        *Please assume that there are no operations between the pointer type and array type, or between the array type and array type. For example:*
-        
-        ``` objectivec
-        int *a;
-        int b[9];
-        a = b;
-        a == b;  
-        ```
+    ``` bash
+    input.c:10: error: incompatible types for assignment operation
+    ```
+    
+    *Please assume that there are no assignments of a string constant to a pointer type.*  
+    *e.g.* `char *s = "Hello World";`
 
-  - Indirection operator (unary `*`)
-    
-      - If the operand is not a pointer type:
-        
-        ``` bash
-        input.c:10: error: indirection requires pointer operand
-        ```
+#### Binary and logical operators (`+`, `-`, `*`, `/`, `%`, `&&`, `||`, `!`)
 
-  - Address-of operator (unary `&`)
+  - If either operand is not an `int` type:
     
-      - If the operand is not a variable:
-        
-        ``` bash
-        input.c:10: error: cannot take the address of an rvalue
-        ```
+    ``` bash
+    input.c:10: error: invalid operands to binary expression
+    ```
 
-  - Member access operators (`.`, `->`)
-    
-      - If the left-hand side is not a struct type:
-        
-        ``` bash
-        input.c:10: error: member reference base type is not a struct
-        ```
-    
-      - If the left-hand side is not a struct pointer type:
-        
-        ``` bash
-        input.c:10: error: member reference base type is not a struct pointer
-        ```
-    
-      - If the struct does not have a specific member:
-        
-        ``` bash
-        input.c:10: error: no such member in struct
-        ```
+#### Unary operators (`-`, `++`, `--`)
 
-  - Subscript operator (`[`, `]`)
+  - If the operand of ‘unary `-`’ is not an `int` type:
+
+  - Or, if the operand of ‘`++`, `--`’ is not an `int` or `char` type:
     
-      - If a subscript operator is used on non-array variable:
-        
-        ``` bash
-        input.c:10: error: subscripted value is not an array
-        ```
+    ``` bash
+    input.c:10: error: invalid argument type to unary expression
+    ```
+
+#### Relational operators (`>=`, `>`, `<=`, `<`)
+
+  - If the operands are not both `int` or both `char` types:
+    
+    ``` bash
+    input.c:10: error: types are not comparable in binary expression
+    ```
+
+#### Equality operators (`==`, `!=`)
+
+  - If the operands are not both `int`, both `char`, or both pointers of same types (including `struct*`):
+    
+    ``` bash
+    input.c:10: error: types are not comparable in binary expression
+    ```
+    
+    *Please assume that there are no operations between the pointer type and array type, or between the array type and array type. For example:*
+    
+    ``` objectivec
+    int *a;
+    int b[9];
+    a = b;
+    a == b;  
+    ```
+
+#### Indirection operator (unary `*`)
+
+  - If the operand is not a pointer type:
+    
+    ``` bash
+    input.c:10: error: indirection requires pointer operand
+    ```
+
+#### Address-of operator (unary `&`)
+
+  - If the operand is not a variable:
+    
+    ``` bash
+    input.c:10: error: cannot take the address of an rvalue
+    ```
+
+#### Member access operators (`->`, `.`)
+
+  - If the left-hand side of ‘`.`’ is not a struct type:
+    
+    ``` bash
+    input.c:10: error: member reference base type is not a struct
+    ```
+
+  - If the left-hand side of ‘`->`’ is not a struct pointer type:
+    
+    ``` bash
+    input.c:10: error: member reference base type is not a struct pointer
+    ```
+
+  - If the right-hand side is not a member of a struct:
+    
+    ``` bash
+    input.c:10: error: no such member in struct
+    ```
+
+#### Subscript operator (`[`, `]`)
+
+  - If a subscript operator is used on non-array variable:
+    
+    ``` bash
+    input.c:10: error: subscripted value is not an array
+    ```
 
 ### Structure & structure pointer declarations
 
@@ -221,7 +219,7 @@ In subC, the scope of struct definitions is always considered global unlike the 
     
         input.c:10: error: incompatible return types
     
-    *Please assume that there are no functions without a return statement. Also, functions returning struct types do not need to be type checked.*
+    *Please assume that there are no functions without a return statement. Also, struct type functions do not need to be type checked.*
 
   - If a non-function entity is called:
     
@@ -246,18 +244,21 @@ In the report, please briefly describe how you implemented the semantic analysis
 Each time the parser encounters a semantic error, print the corresponding error message to `stdout` in the following format.
 
 ``` bash
+$ ./subc <file_name>
 <file_name>:<line_number>: error: <description>
 ```
 
-  - Please insert a **space** character, right before and after "`error:`".
+  - Please insert a **space** character, right before and after ‘`error:`’.
 
-  - Utilize `read_line()` function to get a line number.
+  - `<file_name>` is the second command line argument. (i.e. `argv[1]`)
+
+  - Utilize `get_lineno()` function to get a line number.
 
   - You don’t have to consider the errors that occur across multiple lines.
 
   - If there are multiple errors in the same line, print only one error generated from the earliest reduced production.
 
-A demonstrative example of an input-output pair is given below.
+Helper functions for each type of semantic error are available in the skeleton code. Please consider using them to avoid typos in error messages. A demonstrative example of an input-output pair is given below.
 
 **Disregarding the output rules will result in a penalty to your project score.**
 
