@@ -1,5 +1,6 @@
-void print(int a){
+int print(int a){
 	write_int(a);
+	return 0;
 }
 
 int main(){
