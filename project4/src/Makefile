@@ -1,8 +1,8 @@
 #
-# File Name		: Makefile
-# Description	: Makefile for the compilers project.
+# File Name   : Makefile
+# Description : Makefile for the compilers project.
 # 
-# Course			: Introduction to Compilers
+# Course      : Introduction to Compilers
 # Dept. of Electrical and Computer Engineering, Seoul National University
 #
 

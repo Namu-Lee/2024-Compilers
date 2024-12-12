@@ -1,13 +1,15 @@
 int global_1;
 int global_2;
 
+struct _st2{
+	int z;
+	int w[5];
+};
+
 struct _str1{
 	int x;
 	int y;
-	struct _st2{
-		int z;
-		int w[5];
-	}strstr;
+	struct _st2 strtstr;
 }sample_str;
 
 int main(){
